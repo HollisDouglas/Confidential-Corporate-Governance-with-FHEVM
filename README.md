@@ -6,6 +6,10 @@ A privacy-preserving corporate governance platform built on Zama's FHEVM (Fully 
 
 This project demonstrates how Fully Homomorphic Encryption (FHE) can revolutionize corporate governance by enabling shareholders to vote on proposals with complete privacy. Votes remain encrypted on-chain and are only decrypted when the voting period ends, preventing vote manipulation and ensuring fair decision-making processes.
 
+Video Demostration: Confidential Corporate Governance with FHEVM.mp4  https://streamable.com/6lf2x7 
+
+Live Demo : https://confidential-corporate-governance-w.vercel.app/
+
 ## Key Features
 
 - **Confidential Voting**: Cast votes on governance proposals with FHE encryption
