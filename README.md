@@ -1,1351 +1,505 @@
-# 🏛️ Enhanced Corporate Governance Platform
+# Confidential Corporate Governance with FHEVM
 
-> **Next-generation privacy-preserving blockchain governance with Fully Homomorphic Encryption (FHE), Gateway callback architecture, and advanced security features**
+A privacy-preserving corporate governance platform built on Zama's FHEVM (Fully Homomorphic Encryption Virtual Machine), enabling confidential shareholder voting while maintaining complete transparency and auditability when needed.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Solidity](https://img.shields.io/badge/Solidity-0.8.24-blue)](https://soliditylang.org/)
-[![Hardhat](https://img.shields.io/badge/Hardhat-2.19-yellow)](https://hardhat.org/)
-[![FHEVM](https://img.shields.io/badge/FHEVM-0.5.0-green)](https://docs.zama.ai/fhevm)
+## Overview
 
-## 🌐 Live Demo
+This project demonstrates how Fully Homomorphic Encryption (FHE) can revolutionize corporate governance by enabling shareholders to vote on proposals with complete privacy. Votes remain encrypted on-chain and are only decrypted when the voting period ends, preventing vote manipulation and ensuring fair decision-making processes.
 
-**🔗 Platform**: [https://fhe-corporate-governance-ultimate.vercel.app/](https://fhe-corporate-governance-ultimate.vercel.app/)
+## Key Features
 
-**🔗 Demo Video**: demo.mp4
+- **Confidential Voting**: Cast votes on governance proposals with FHE encryption
+- **Access Control**: Role-based permissions for board members and shareholders
+- **Public Decryption**: Automatic vote tallying after proposal deadline
+- **User Decryption**: Shareholders can verify their own encrypted votes
+- **Input Proofs**: Secure vote submission with cryptographic verification
+- **Real-time Dashboard**: Track active proposals and voting status
+- **Modern Web Interface**: Responsive Vue.js application with TypeScript
 
-**📱 Contract**: `0x7c04dD380e26B56899493ec7A654EdEf108A2414` (Sepolia)
+## FHEVM Concepts Demonstrated
 
-**🔍 Explorer**: [View on Etherscan](https://sepolia.etherscan.io/address/0x7c04dD380e26B56899493ec7A654EdEf108A2414)
+### 1. Confidential Data Storage
+The smart contract stores votes as encrypted values using FHEVM's encrypted types:
+- Encrypted vote choices (euint8)
+- Confidential vote tallies during active voting
+- Privacy-preserving vote counting
 
----
+### 2. Access Control Patterns
+Demonstrates proper FHE access control:
+- `TFHE.allow()` for granting access to encrypted values
+- `TFHE.allowTransient()` for temporary access during transactions
+- Role-based access for board members and shareholders
 
-## 📖 Table of Contents
+### 3. Public Decryption
+Shows how to decrypt confidential data when appropriate:
+- Votes remain encrypted during voting period
+- Automatic decryption after proposal deadline
+- Transparent result publication
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Live Demo](#-live-demo-1)
-- [Architecture](#-architecture)
-- [Technology Stack](#-technology-stack)
-- [Quick Start](#-quick-start)
-- [Installation](#-installation)
-- [Usage Guide](#-usage-guide)
-- [Testing](#-testing)
-- [Deployment](#-deployment)
-- [Security](#-security)
-- [API Reference](#-api-reference)
-- [Troubleshooting](#-troubleshooting)
-- [Contributing](#-contributing)
-- [License](#-license)
+### 4. User Decryption
+Enables users to verify their own encrypted votes:
+- Individual vote verification
+- Privacy maintained for other voters
+- Cryptographic proof of vote integrity
 
----
+### 5. Input Proof Verification
+Secure vote submission process:
+- Client-side vote encryption
+- Input proof generation
+- On-chain proof verification
+- Prevention of invalid encrypted values
 
-## 🎯 Overview
+## Technology Stack
 
-The **Enhanced Corporate Governance Platform** is a next-generation blockchain solution that combines **Fully Homomorphic Encryption (FHE)**, **Gateway callback architecture**, and **advanced security mechanisms** to deliver truly confidential and resilient corporate governance.
+### Smart Contract
+- **Solidity**: Smart contract development
+- **FHEVM SDK**: Fully Homomorphic Encryption operations
+- **Hardhat**: Development environment and testing
+- **OpenZeppelin**: Security and standard implementations
 
-### Revolutionary Features
+### Frontend Application
+- **Vue 3**: Progressive JavaScript framework with Composition API
+- **TypeScript**: Type-safe development
+- **Vite**: Next-generation frontend tooling
+- **Tailwind CSS**: Utility-first styling
+- **Ethers.js**: Ethereum blockchain interaction
+- **fhevmjs**: FHEVM client-side encryption
 
-- 🔐 **FHE-Powered Privacy**: Individual votes encrypted on-chain, only aggregates decrypted
-- 🌉 **Gateway Callback Mode**: Asynchronous decryption via secure oracle network
-- ⏰ **Timeout Protection**: Automatic refunds prevent permanent lock-up
-- 🛡️ **Multi-Layer Security**: Input validation, access control, overflow protection, audit hints
-- 🎲 **Division Privacy Protection**: Random multipliers prevent side-channel attacks
-- 💰 **Price Obfuscation**: Encrypted vote weights resist economic analysis
-- ⚡ **HCU Optimized**: Gas-efficient homomorphic operations
-- 🧪 **Production-Ready**: Comprehensive testing and security audits
-
-### Innovation: Gateway Callback Architecture
-
-```
-User Submits Encrypted Vote → Contract Records → Gateway Decrypts → Callback Finalizes
-```
-
-**Benefits:**
-- ✅ Async processing (no blocking)
-- ✅ Threshold decryption (no single point of failure)
-- ✅ Cryptographic verification (tamper-proof)
-- ✅ Timeout protection (fail-safe mechanism)
-
-### Problem & Advanced Solution
-
-**Problem**: Traditional systems expose vote choices, vulnerable to coercion and manipulation. Simple encryption doesn't allow on-chain computation.
-
-**Our Solution**:
-- **FHE**: Compute on encrypted data (add votes without decrypting)
-- **Gateway**: Secure threshold decryption (5-of-7 nodes required)
-- **Refund Mechanism**: Handle Gateway failures gracefully
-- **Privacy Protection**: Random multipliers + obfuscation prevent leakage
-
----
-
-## ✨ Key Features
-
-### 🔐 FHE Privacy Features
-
-- ✅ **Fully Homomorphic Encryption**
-  - Client-side vote encryption (fhevmjs)
-  - Zero-knowledge proof generation
-  - On-chain homomorphic operations
-  - Individual votes NEVER decrypted
-
-- ✅ **Division Privacy Protection**
-  - Random obfuscation multipliers (100-1099)
-  - Prevents gas analysis attacks
-  - Side-channel resistance
-  - Automatic deobfuscation after decryption
-
-- ✅ **Price Obfuscation**
-  - Encrypted vote weights
-  - Variable gas costs
-  - Economic analysis resistance
-  - No correlation between transactions
-
-### 🌉 Gateway Callback Features
-
-- ✅ **Asynchronous Decryption**
-  - Non-blocking request/callback pattern
-  - Threshold decryption (5-of-7 nodes)
-  - Cryptographic proof verification
-  - Request ID tracking
-
-- ✅ **Timeout Protection**
-  - 7-day decryption deadline
-  - Automatic timeout handling
-  - State transition to Refunded
-  - No permanent lock-up
-
-- ✅ **Refund Mechanism**
-  - Handle decryption failures
-  - Manual trigger by board
-  - Automatic timeout trigger
-  - Transparent reason logging
-
-### 🗳️ Governance Features
-
-- ✅ **Multi-Type Proposals**
-  - Board elections (50% threshold)
-  - Budget approvals (60% threshold)
-  - Mergers & acquisitions (75% threshold)
-  - Dividend distributions (60% threshold)
-  - Bylaw amendments (75% threshold)
-  - Strategic decisions (60% threshold)
-
-- ✅ **Proposal Lifecycle**
-  - Active → Expired → DecryptionRequested → Resolved/Refunded
-  - State machine validation
-  - Deadline enforcement
-  - Complete audit trail
-
-### 🛡️ Security Features
-
-- ✅ **Multi-Layer Access Control**
-  - Owner: Company initialization, board management
-  - Board: Shareholder registration, proposal creation, decryption requests
-  - Shareholders: Confidential voting
-  - Role-based permission matrix
-
-- ✅ **Comprehensive Input Validation**
-  - Address validation (no zero address)
-  - Bounds checking (shares, voting periods)
-  - String validation (non-empty names)
-  - State validation (proposal states)
-  - Existence checks (proposal IDs)
-
-- ✅ **Overflow Protection**
-  - Solidity 0.8.24+ built-in checks
-  - Automatic overflow/underflow prevention
-  - No SafeMath needed
-
-- ✅ **DoS Protection**
-  - No unbounded loops
-  - Gas-efficient operations
-  - Direct mapping lookups (O(1))
-
-- ✅ **Audit Trail**
-  - Complete event logging
-  - Shareholder/board actions tracked
-  - Proposal lifecycle recorded
-  - Gateway interactions logged
-
-### ⚡ HCU Optimization Features
-
-- ✅ **Gas-Efficient FHE Operations**
-  - Minimize ciphertext conversions
-  - Batch homomorphic operations
-  - Efficient `FHE.select()` usage
-  - Appropriate data types (euint64)
-
-- ✅ **HCU Management**
-  - MAX_HCU_PER_VOTE: 50,000
-  - Optimized vote casting (~500k gas)
-  - Efficient decryption requests (~200k gas)
-  - Gateway callback optimization (~150k gas)
-
-### 🔧 Developer Features
-
-- ✅ **Complete Toolchain**
-  - Hardhat development environment
-  - Comprehensive test suite (60+ tests)
-  - Automated security audits
-  - Gas benchmarking tools
-
-- ✅ **CI/CD Pipeline**
-  - GitHub Actions workflows
-  - Automated testing on push/PR
-  - Coverage reporting with Codecov
-  - Multi-node testing (18.x, 20.x)
-
-- ✅ **Code Quality**
-  - Solhint for Solidity linting
-  - ESLint for JavaScript/TypeScript
-  - Prettier formatting
-  - Pre-commit hooks with Husky
-
-### 🎨 Frontend Features
-
-- ✅ **Modern Vue.js Application**
-  - Vue 3 with Composition API
-  - TypeScript for type safety
-  - Vite for fast development
-  - Tailwind CSS for beautiful UI
-
-- ✅ **FHE-based Confidential Voting**
-  - Client-side vote encryption using FHEVM SDK
-  - Privacy-preserving voting mechanism
-  - Transparent result verification
-  - Secure key management
-
-- ✅ **Wallet Integration**
-  - MetaMask and Web3 wallet support
-  - Automatic network detection
-  - Network switching to Sepolia
-  - Real-time balance updates
-  - Account change detection
-
-- ✅ **User Experience**
-  - Responsive design for all devices
-  - Real-time proposal updates
-  - Toast notifications for feedback
-  - Loading states and error handling
-  - Beautiful gradients and animations
-
-- ✅ **Smart Contract Integration**
-  - Direct contract interaction via ethers.js
-  - Gas estimation before transactions
-  - Transaction status tracking
-  - Event listening for updates
-
----
-
-## 🎬 Live Demo
-
-### Try It Yourself
-
-1. **Visit Platform**: [https://fhe-corporate-governance-ultimate.vercel.app/-platform.vercel.app](https://fhe-corporate-governance-ultimate.vercel.app/-platform.vercel.app)
-2. **Connect Wallet**: Use MetaMask on Sepolia testnet
-3. **Get Test ETH**: [Sepolia Faucet](https://sepoliafaucet.com/)
-4. **Start Voting**: Create proposals and cast votes
-
-### Demo Credentials
+## Project Structure
 
 ```
-Network: Sepolia Testnet
-Chain ID: 11155111
-Contract: 0x7c04dD380e26B56899493ec7A654EdEf108A2414
+ConfidentialCorporateGovernance/
+├── contracts/
+│   ├── ConfidentialGovernance.sol    # Main governance contract
+│   └── interfaces/
+│       └── IGovernance.sol           # Contract interface
+├── test/
+│   ├── ConfidentialGovernance.test.ts
+│   └── fixtures/
+│       └── deploy.ts
+├── scripts/
+│   ├── deploy.ts
+│   └── interact.ts
+├── frontend/                          # Vue.js application
+│   ├── src/
+│   │   ├── components/               # Reusable UI components
+│   │   ├── composables/              # Vue composition functions
+│   │   ├── views/                    # Page components
+│   │   ├── utils/                    # Helper functions
+│   │   └── types/                    # TypeScript definitions
+│   ├── public/                       # Static assets
+│   └── package.json
+├── hardhat.config.ts
+├── package.json
+└── README.md
 ```
 
-### Video Walkthrough
+## Smart Contract Architecture
 
-[![Demo Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+### Core Contract: ConfidentialGovernance
 
-Watch our comprehensive walkthrough covering:
-- Platform navigation
-- Shareholder registration
-- Proposal creation
-- Confidential voting
-- Result verification
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
 
----
+import "fhevm/lib/TFHE.sol";
 
-## 🏗️ Architecture
+contract ConfidentialGovernance {
+    // Encrypted vote storage
+    mapping(uint256 => mapping(address => euint8)) private encryptedVotes;
 
-### System Overview
+    // Public vote tallies (decrypted after deadline)
+    mapping(uint256 => VoteTally) public results;
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Frontend Layer                            │
-│            (Web3 Wallet + FHEVM Client)                      │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│              Smart Contract Layer                            │
-│        CorporateGovernanceEnhanced.sol                       │
-│                                                               │
-│  ┌──────────┐  ┌──────────┐  ┌──────────────────┐          │
-│  │  Access  │  │   FHE    │  │  State Machine   │          │
-│  │ Control  │  │  Voting  │  │   Management     │          │
-│  └──────────┘  └──────────┘  └──────────────────┘          │
-│                                                               │
-│  ┌────────────────────────────────────────────────┐         │
-│  │  Gateway Callback Interface                     │         │
-│  │  - requestTallyDecryption()                    │         │
-│  │  - resolveTallyCallback()                      │         │
-│  └────────────────────────────────────────────────┘         │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 FHEVM Gateway (Oracle)                       │
-│                                                               │
-│  ┌────────────────────────────────────────────────┐         │
-│  │  Threshold Decryption Service (5-of-7)        │         │
-│  │  - Listen for decryption requests              │         │
-│  │  - Perform collaborative decryption            │         │
-│  │  - Generate cryptographic proofs               │         │
-│  │  - Execute callbacks with results              │         │
-│  └────────────────────────────────────────────────┘         │
-└─────────────────────────────────────────────────────────────┘
+    // Access control
+    mapping(address => bool) public boardMembers;
+    mapping(address => Shareholder) public shareholders;
+
+    // Proposal management
+    Proposal[] public proposals;
+}
 ```
 
-### Gateway Callback Workflow
+### Key Functions
 
-```
-1. Voting Period Ends
-   ↓
-2. Board Requests Decryption
-   - requestTallyDecryption(proposalId)
-   ↓
-3. Contract Emits Event
-   - DecryptionRequested(requestId, ciphertexts)
-   ↓
-4. Gateway Detects Event
-   - 5 of 7 nodes collaborate
-   - Threshold decryption performed
-   ↓
-5. Gateway Generates Proof
-   - Cryptographic verification data
-   ↓
-6. Gateway Calls Back
-   - resolveTallyCallback(requestId, cleartexts, proof)
-   ↓
-7. Contract Verifies & Finalizes
-   - FHE.checkSignatures() validates proof
-   - Proposal state → Resolved
-   - Results published
-
-TIMEOUT PATH (if Gateway fails):
-   ↓
-After 7 Days: handleDecryptionTimeout()
-   - State → Refunded
-   - No permanent lock
+#### 1. Creating Proposals (Board Members Only)
+```solidity
+function createProposal(
+    uint8 _type,
+    string memory _title,
+    uint256 _days
+) external onlyBoardMember returns (uint256)
 ```
 
-### Privacy Protection Flow
-
-```
-Client Side:
-  User Vote (1 or 2)
-    → Encrypt with FHE
-    → Generate ZK Proof
-    → Submit Transaction
-
-Contract:
-  Encrypted Vote
-    → Apply Obfuscation Multiplier (×347)
-    → Homomorphic Addition (no decryption!)
-    → Store Encrypted Tally
-
-Gateway:
-  Encrypted Tallies
-    → Threshold Decryption
-    → Remove Obfuscation Multiplier (÷347)
-    → Return Actual Counts
-
-Result: Individual votes NEVER revealed!
+#### 2. Confidential Voting
+```solidity
+function voteConfidential(
+    uint256 _id,
+    bytes calldata encryptedVote,
+    bytes calldata inputProof
+) external onlyShareholder
 ```
 
-For detailed architecture documentation, see [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
+#### 3. Vote Finalization with Public Decryption
+```solidity
+function finalize(uint256 _id) public {
+    require(block.timestamp >= proposals[_id].deadline, "Voting still active");
 
----
+    // Decrypt vote tallies
+    uint32 yesVotes = TFHE.decrypt(encryptedYesCount);
+    uint32 noVotes = TFHE.decrypt(encryptedNoCount);
 
-## 🛠️ Technology Stack
+    results[_id] = VoteTally(yesVotes, noVotes, yesVotes > noVotes);
+}
+```
 
-### Smart Contracts
+#### 4. User Vote Verification
+```solidity
+function getMyVote(uint256 _id) external view returns (bytes memory) {
+    // Allow voter to decrypt their own vote
+    return TFHE.reencrypt(encryptedVotes[_id][msg.sender], msg.sender);
+}
+```
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **Solidity** | 0.8.24 | Smart contract language with overflow protection |
-| **Hardhat** | 2.19+ | Development environment and testing |
-| **OpenZeppelin** | 5.0.0 | Security libraries (Ownable) |
-| **FHEVM SDK** | 0.5.0 | Fully Homomorphic Encryption for Solidity |
-| **Zama FHE** | Latest | FHE primitives (euint64, ebool) |
-| **Ethers.js** | 6.9.0 | Blockchain interaction library |
-
-### FHE & Privacy
-
-| Component | Purpose |
-|-----------|---------|
-| **fhevmjs** | Client-side FHE encryption library |
-| **ZK Proofs** | Zero-knowledge proof generation and verification |
-| **Gateway** | Threshold decryption oracle network |
-| **Obfuscation** | Random multipliers for division privacy |
-
-### Frontend Frameworks (Original)
-
-| Framework | Version | Purpose |
-|-----------|---------|---------|
-| **Vue.js** | 3.4.21 | Progressive JavaScript framework |
-| **TypeScript** | 5.2.2 | Type-safe development |
-| **Vite** | 5.2.0 | Fast frontend build tool |
-| **Tailwind CSS** | 3.4.4 | Utility-first CSS framework |
-
-### Development Tools
-
-| Tool | Purpose |
-|------|---------|
-| **Solhint** | Solidity linting |
-| **ESLint** | JavaScript/TypeScript linting |
-| **Prettier** | Code formatting |
-| **Husky** | Git hooks |
-| **Mocha** | Test framework |
-| **Chai** | Assertion library |
-| **vue-tsc** | Vue TypeScript compiler |
-
-### Testing & Quality
-
-| Tool | Purpose |
-|------|---------|
-| **Hardhat Test** | Smart contract unit testing |
-| **Solidity Coverage** | Contract code coverage |
-| **Gas Reporter** | Gas usage analysis |
-| **Slither** | Static analysis (optional) |
-| **Codecov** | Coverage reporting |
-| **Vitest** | Unit testing for Vue components |
-
-### CI/CD
-
-| Service | Purpose |
-|---------|---------|
-| **GitHub Actions** | Automation workflows |
-| **Codecov** | Coverage tracking |
-| **Vercel** | Frontend deployment (optional) |
-| **Etherscan** | Contract verification |
-
-### Networks
-
-| Network | Chain ID | Purpose |
-|---------|----------|---------|
-| **Hardhat** | 31337 | Local development |
-| **Sepolia** | 11155111 | Public testnet |
-| **Ethereum** | 1 | Production (mainnet) |
-
----
-
-## 🚀 Quick Start
+## Installation & Setup
 
 ### Prerequisites
+- Node.js >= 18.0.0
+- npm >= 9.0.0
+- MetaMask or compatible Web3 wallet
+- Sepolia testnet ETH
 
-Before you begin, ensure you have:
+### Backend Setup
 
-- ✅ **Node.js** v18.0 or higher ([Download](https://nodejs.org/))
-- ✅ **npm** v7.0 or higher
-- ✅ **Git** ([Download](https://git-scm.com/))
-- ✅ **MetaMask** browser extension ([Install](https://metamask.io/))
-- ✅ **Sepolia ETH** for testnet ([Faucet](https://sepoliafaucet.com/))
-
-### 5-Minute Setup
-
-#### Smart Contract Setup
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/YOUR_ORG/corporate-governance-platform.git
-cd corporate-governance-platform
-
-# 2. Install dependencies
-npm install
-
-# 3. Set up environment
-cp .env.example .env
-# Edit .env with your configuration
-
-# 4. Compile contracts
-npm run compile
-
-# 5. Run tests
-npm test
-
-# 6. Deploy to Sepolia
-npm run deploy:sepolia
-
-# 7. Verify on Etherscan
-npm run verify:sepolia
-
-# 8. Interact with contract
-npm run interact
-```
-
-#### Vue.js Frontend Setup
-
-```bash
-# 1. Navigate to frontend directory
-cd CorporateGovernanceUltimate
-
-# 2. Install frontend dependencies
-npm install
-
-# 3. Set up frontend environment
-cp .env.example .env
-# Edit .env with your contract address
-
-# 4. Start development server
-npm run dev
-
-# Frontend will be available at http://localhost:3001
-```
-
-That's it! You're ready to go. 🎉
-
----
-
-## 📦 Installation
-
-### Step 1: Clone Repository
-
-```bash
-git clone https://github.com/YOUR_ORG/corporate-governance-platform.git
-cd corporate-governance-platform
-```
-
-### Step 2: Install Dependencies
-
+1. Clone the repository and install dependencies:
 ```bash
 npm install
 ```
 
-This installs:
-- Hardhat and plugins
-- OpenZeppelin contracts
-- Testing libraries
-- Linting tools
-- Development dependencies
-
-### Step 3: Environment Configuration
-
-Create `.env` file:
-
+2. Configure environment variables:
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` with your configuration:
-
+Edit `.env`:
 ```env
-# Network RPC URLs
-SEPOLIA_RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
-MAINNET_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY
-
-# Deployment wallet private key
 PRIVATE_KEY=your_private_key_here
-
-# Etherscan API key for verification
-ETHERSCAN_API_KEY=your_etherscan_api_key_here
-
-# Gas reporting (optional)
-REPORT_GAS=false
-COINMARKETCAP_API_KEY=your_coinmarketcap_api_key_here
-
-# Codecov (for CI/CD)
-CODECOV_TOKEN=your_codecov_token_here
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/your_key
+ETHERSCAN_API_KEY=your_etherscan_key
 ```
 
-### Step 4: Compile Contracts
-
+3. Compile contracts:
 ```bash
-npm run compile
+npx hardhat compile
 ```
 
-Expected output:
-```
-Compiling 1 file with 0.8.20
-Compilation finished successfully
-```
-
-### Step 5: Run Tests
-
+4. Run tests:
 ```bash
-npm test
+npx hardhat test
 ```
 
-Expected output:
-```
-  CorporateGovernanceUltimate
-    ✓ should deploy successfully
-    ✓ should initialize company
-    ...
-  60 passing (2s)
+5. Deploy to Sepolia:
+```bash
+npx hardhat run scripts/deploy.ts --network sepolia
 ```
 
----
+### Frontend Setup
 
-## 📋 Usage Guide
-
-### For Contract Owners
-
-#### 1. Initialize Company
-
-```javascript
-import { ethers } from "hardhat";
-
-const governance = await ethers.getContractAt("CorporateGovernanceUltimate", contractAddress);
-
-await governance.initCompany("Tech Innovations Corp", 1000000);
+1. Navigate to frontend directory:
+```bash
+cd frontend
 ```
 
-#### 2. Add Board Members
-
-```javascript
-await governance.addBoard("0xBoardMember1Address");
-await governance.addBoard("0xBoardMember2Address");
+2. Install dependencies:
+```bash
+npm install
 ```
+
+3. Configure environment:
+```bash
+cp .env.example .env
+```
+
+Edit `.env`:
+```env
+VITE_CONTRACT_ADDRESS=deployed_contract_address
+VITE_RPC_URL=https://sepolia.infura.io/v3/your_key
+VITE_CHAIN_ID=11155111
+```
+
+4. Start development server:
+```bash
+npm run dev
+```
+
+Visit `http://localhost:3001`
+
+5. Build for production:
+```bash
+npm run build
+```
+
+## Usage Guide
+
+### For Company Administrators
+
+1. **Initialize Company**
+   - Connect wallet as contract owner
+   - Set company name and total shares
+   - Company details are stored on-chain
+
+2. **Add Board Members**
+   - Grant board member role to addresses
+   - Board members can create proposals
+
+3. **Add Shareholders**
+   - Register shareholder addresses
+   - Assign share amounts
+   - Set shareholder names and information
 
 ### For Board Members
 
-#### 1. Register Shareholders
-
-```javascript
-await governance.addShareholder(
-  "0xShareholderAddress",
-  10000,  // shares
-  "Alice Johnson"
-);
-```
-
-#### 2. Create Proposal
-
-```javascript
-// Proposal types: 0=BOARD, 1=BUDGET, 2=MERGER, 3=DIVIDEND, 4=BYLAW, 5=STRATEGIC
-await governance.createProposal(
-  0,  // type
-  "Elect new technology board member",
-  7   // voting days
-);
-```
-
-#### 3. Finalize Proposal
-
-```javascript
-// After voting period ends
-await governance.finalize(proposalId);
-
-// Get results
-const [forVotes, againstVotes, passed] = await governance.getResults(proposalId);
-console.log(`Proposal ${passed ? "PASSED" : "FAILED"}`);
-```
+1. **Create Proposals**
+   - Navigate to Proposals page
+   - Click "Create Proposal"
+   - Select proposal type (Board Decision, Financial, Strategic, Operational)
+   - Enter proposal title and voting duration
+   - Submit transaction
 
 ### For Shareholders
 
-#### 1. Cast Vote
+1. **View Proposals**
+   - Dashboard shows active and completed proposals
+   - Click on proposal cards for details
 
-```javascript
-// Choice: 1=FOR, 2=AGAINST
-await governance.vote(proposalId, 1);
-```
+2. **Cast Confidential Votes**
+   - Click "Vote" on active proposal
+   - Select Yes/No/Abstain
+   - Enable "Confidential Vote" option
+   - Vote is encrypted client-side before submission
+   - Confirm transaction in wallet
 
-#### 2. Check Voting Status
+3. **Verify Your Vote**
+   - After voting, verify your encrypted vote
+   - Your vote remains private until finalization
 
-```javascript
-const hasVoted = await governance.hasVotedOn(proposalId, voterAddress);
-console.log(`Has voted: ${hasVoted}`);
-```
+4. **View Results**
+   - Results appear after voting deadline
+   - Votes are decrypted and tallied automatically
 
-#### 3. View Shareholder Info
+## Testing
 
-```javascript
-const info = await governance.getShareholderInfo(shareholderAddress);
-console.log(`Shares: ${info[1]}, Name: ${info[3]}`);
-```
+### Smart Contract Tests
 
-### Common Workflows
-
-#### Complete Governance Cycle
-
-```bash
-# 1. Run full simulation
-npm run simulate
-
-# This will:
-# - Deploy contract
-# - Initialize company
-# - Add board members
-# - Register shareholders
-# - Create multiple proposals
-# - Simulate voting
-# - Display results
-```
-
-#### Interact with Deployed Contract
-
-```bash
-npm run interact
-```
-
-This script demonstrates:
-- Company information retrieval
+The test suite demonstrates:
+- Company initialization
+- Board member management
 - Shareholder registration
 - Proposal creation
-- Vote casting
-- Result checking
+- Confidential voting
+- Vote decryption
+- Access control enforcement
+- Edge case handling
 
----
+Run tests:
+```bash
+npx hardhat test
+```
 
-## 🧪 Testing
+Test coverage:
+```bash
+npx hardhat coverage
+```
 
-### Test Suite Overview
-
-The project includes **60+ comprehensive test cases** with **95%+ code coverage**.
-
-### Run All Tests
+### Frontend Tests
 
 ```bash
-npm test
+cd frontend
+npm run test
 ```
 
-### Run Tests with Gas Reporting
+## Security Considerations
 
-```bash
-npm run test:gas
-```
+### FHE Security
+- All votes encrypted with FHEVM
+- Encryption keys managed by FHEVM network
+- No plaintext votes stored on-chain during voting period
 
-Expected output:
-```
-·----------------------------------------|----------------|
-|  Contract                              |  Gas Used      |
-·----------------------------------------|----------------|
-|  CorporateGovernanceUltimate           |                |
-├─ deploy                                 2,547,893       ·
-├─ initCompany                           95,234          ·
-├─ addShareholder                        98,567          ·
-├─ createProposal                        142,890         ·
-├─ vote                                  89,456          ·
-└─ finalize                              45,678          ·
-·----------------------------------------|----------------|
-```
+### Access Control
+- Role-based permissions enforced
+- Board member verification for proposal creation
+- Shareholder verification for voting
+- Owner-only administrative functions
 
-### Generate Coverage Report
-
-```bash
-npm run coverage
-```
-
-This creates:
-- Terminal summary
-- `coverage/` directory with HTML report
-- `coverage/lcov.info` for CI/CD
-
-Expected coverage:
-```
---------------------|---------|----------|---------|---------|
-File                | % Stmts | % Branch | % Funcs | % Lines |
---------------------|---------|----------|---------|---------|
- contracts/         |   98.25 |    95.83 |     100 |   98.25 |
-  Corporate...sol   |   98.25 |    95.83 |     100 |   98.25 |
---------------------|---------|----------|---------|---------|
-All files           |   98.25 |    95.83 |     100 |   98.25 |
---------------------|---------|----------|---------|---------|
-```
-
-### Test Categories
-
-| Category | Tests | Coverage |
-|----------|-------|----------|
-| Deployment & Initialization | 9 | ✅ |
-| Board Member Management | 4 | ✅ |
-| Shareholder Management | 6 | ✅ |
-| Proposal Creation | 7 | ✅ |
-| Voting Mechanism | 12 | ✅ |
-| Proposal Finalization | 5 | ✅ |
-| Results & Calculations | 4 | ✅ |
-| View Functions | 5 | ✅ |
-| Edge Cases | 5 | ✅ |
-| Gas Optimization | 3 | ✅ |
-
-See [TESTING.md](./TESTING.md) for detailed documentation.
-
----
-
-## 🚀 Deployment
-
-### Deploy to Sepolia Testnet
-
-```bash
-# 1. Ensure you have Sepolia ETH
-# Get from: https://sepoliafaucet.com/
-
-# 2. Deploy contract
-npm run deploy:sepolia
-```
-
-Expected output:
-```
-========================================
-Corporate Governance Platform Deployment
-========================================
-
-Network: sepolia
-Chain ID: 11155111
-Deployer Address: 0x...
-Account Balance: 0.5 ETH
-
-Deploying CorporateGovernanceUltimate contract...
-✓ Contract deployed successfully!
-Contract Address: 0x7c04dD380e26B56899493ec7A654EdEf108A2414
-
-Initializing company configuration...
-✓ Company initialized
-
-✓ Deployment information saved to: deployments/deployment-sepolia-xxx.json
-
-View on Etherscan:
-https://sepolia.etherscan.io/address/0x7c04dD380e26B56899493ec7A654EdEf108A2414
-```
-
-### Verify on Etherscan
-
-```bash
-npm run verify:sepolia
-```
-
-Expected output:
-```
-========================================
-Contract Verification on Etherscan
-========================================
-
-Contract Address: 0x7c04dD380e26B56899493ec7A654EdEf108A2414
-
-Starting verification process...
-✓ Contract verified successfully!
-
-View on Etherscan:
-https://sepolia.etherscan.io/address/0x7c04dD380e26B56899493ec7A654EdEf108A2414#code
-```
-
-### Deploy to Mainnet
-
-**⚠️ WARNING: Deploying to mainnet uses real ETH. Ensure thorough testing on Sepolia first!**
-
-```bash
-# 1. Test extensively on Sepolia
-npm run deploy:sepolia
-npm run interact
-npm run simulate
-
-# 2. Run security audit
-npm run security:audit
-
-# 3. Deploy to mainnet
-npm run deploy:mainnet
-
-# 4. Verify contract
-npm run verify:mainnet
-```
-
-### Deployment via GitHub Actions
-
-Use the deployment workflow:
-
-1. Go to **Actions** tab on GitHub
-2. Select **Deploy to Sepolia** workflow
-3. Click **Run workflow**
-4. Choose network (sepolia/mainnet)
-5. Confirm and run
-
-See [CI_CD.md](./CI_CD.md) for details.
-
----
-
-## 🔒 Security
-
-### Security Features
-
-#### ✅ Access Control
-- OpenZeppelin Ownable pattern
-- Role-based permissions (Owner, Board, Shareholders)
-- Function-level restrictions
-
-#### ✅ Vote Protection
-- Double voting prevention via mapping
+### Input Validation
+- Input proofs verify encrypted vote validity
 - Proposal deadline enforcement
-- Active proposal validation
+- Double-voting prevention
+- Invalid vote rejection
 
-#### ✅ Input Validation
-- Bounds checking on all inputs
-- Type safety enforcement
-- State validation before operations
+## Gas Optimization
 
-#### ✅ Integer Protection
-- Solidity 0.8.20+ with automatic overflow checks
-- No SafeMath needed
+- Efficient encrypted storage patterns
+- Batch operations where possible
+- Optimized access control checks
+- Minimal storage usage
 
-#### ✅ DoS Protection
-- No unbounded loops
-- Gas-efficient operations
-- Limited array sizes
+## Common Patterns & Best Practices
 
-### Security Audit
-
-Run automated security audit:
-
-```bash
-npm run security:audit
+### 1. Proper FHE Allowances
+```typescript
+// Always grant access before using encrypted values
+TFHE.allow(encryptedValue, address);
 ```
 
-This performs **10 automated checks**:
-1. ✅ Access Control
-2. ✅ Reentrancy Protection
-3. ✅ Integer Overflow
-4. ✅ Gas Limitations
-5. ✅ DoS Protection
-6. ✅ State Visibility
-7. ✅ Function Visibility
-8. ✅ Event Emissions
-9. ✅ Input Validation
-10. ✅ Double Voting Prevention
+### 2. Input Proof Usage
+```typescript
+// Client-side encryption with proof
+const { handles, inputProof } = await instance.createEncryptedInput(
+    contractAddress,
+    userAddress
+).add8(voteChoice).encrypt();
 
-### Gas Benchmarking
-
-```bash
-npm run gas:benchmark
+// Submit with proof
+await contract.voteConfidential(proposalId, handles[0], inputProof);
 ```
 
-Expected results:
-| Operation | Gas | Rating |
-|-----------|-----|--------|
-| Initialize | ~100k | ✅ Good |
-| Add Board | ~50k | ✅ Excellent |
-| Add Shareholder | ~100k | ✅ Good |
-| Create Proposal | ~150k | ✅ Good |
-| Vote | ~100k | ✅ Good |
-| Finalize | ~50k | ✅ Excellent |
+### 3. Decryption Timing
+```typescript
+// Only decrypt when appropriate
+require(block.timestamp >= deadline, "Cannot decrypt yet");
+uint32 result = TFHE.decrypt(encryptedValue);
+```
 
-### Vulnerability Reporting
+## Anti-Patterns to Avoid
 
-Found a security issue? Please report responsibly:
-
-1. **DO NOT** create public GitHub issue
-2. Email: security@your-domain.com
-3. Include reproduction steps
-4. Allow time for fix before disclosure
-
-See [SECURITY.md](./SECURITY.md) for complete security documentation.
-
----
-
-## 📚 API Reference
-
-### Core Functions
-
-#### `initCompany(string memory _name, uint256 _shares)`
-Initializes company with name and total shares.
-
-**Access**: Owner only
-**Parameters**:
-- `_name`: Company name
-- `_shares`: Total shares to allocate
-
+### Don't: Use encrypted values in view functions
 ```solidity
-await governance.initCompany("Tech Corp", 1000000);
+// ❌ WRONG - Cannot return encrypted values in view
+function getVote(uint256 id) public view returns (euint8) {
+    return encryptedVotes[id][msg.sender];
+}
 ```
 
-#### `addBoard(address _member)`
-Adds a new board member.
-
-**Access**: Owner only
-**Parameters**:
-- `_member`: Address of board member
-
+### Do: Re-encrypt for user
 ```solidity
-await governance.addBoard("0x123...");
+// ✅ CORRECT - Re-encrypt for specific user
+function getVote(uint256 id) public view returns (bytes memory) {
+    return TFHE.reencrypt(encryptedVotes[id][msg.sender], msg.sender);
+}
 ```
 
-#### `addShareholder(address _addr, uint32 _shares, string memory _name)`
-Registers a new shareholder.
-
-**Access**: Board only
-**Parameters**:
-- `_addr`: Shareholder address
-- `_shares`: Number of shares
-- `_name`: Shareholder name
-
+### Don't: Forget access permissions
 ```solidity
-await governance.addShareholder("0xABC...", 5000, "Alice");
+// ❌ WRONG - Missing allowThis
+euint8 vote = TFHE.asEuint8(encryptedInput);
 ```
 
-#### `createProposal(uint8 _type, string memory _title, uint256 _days)`
-Creates a new governance proposal.
-
-**Access**: Board only
-**Parameters**:
-- `_type`: Proposal type (0-5)
-- `_title`: Proposal title
-- `_days`: Voting period in days
-
-**Returns**: Proposal ID
-
+### Do: Grant proper access
 ```solidity
-const proposalId = await governance.createProposal(0, "Board Election", 7);
+// ✅ CORRECT - Grant access to contract
+euint8 vote = TFHE.asEuint8(encryptedInput);
+TFHE.allowThis(vote);
+TFHE.allow(vote, msg.sender);
 ```
 
-#### `vote(uint256 _id, uint8 _choice)`
-Casts a vote on a proposal.
+## Understanding Handles
 
-**Access**: Shareholders only
-**Parameters**:
-- `_id`: Proposal ID
-- `_choice`: Vote choice (1=FOR, 2=AGAINST)
+### What are Handles?
+Handles are references to encrypted values in FHEVM:
+- Unique identifier for encrypted data
+- Enable efficient storage and computation
+- Used in re-encryption for users
 
+### Handle Lifecycle
+1. **Creation**: Generated during encryption
+2. **Storage**: Stored in contract state
+3. **Computation**: Used in FHE operations
+4. **Access**: Re-encrypted for authorized users
+5. **Decryption**: Converted to plaintext when appropriate
+
+### Example
 ```solidity
-await governance.vote(1, 1); // Vote FOR
+// Store handle
+euint8 encryptedVote = TFHE.asEuint8(input);
+encryptedVotes[proposalId][voter] = encryptedVote;
+
+// Use in computation
+euint32 totalYes = TFHE.add(totalYes, encryptedVote);
+
+// Re-encrypt for user
+bytes memory reencrypted = TFHE.reencrypt(encryptedVote, voter);
 ```
 
-#### `finalize(uint256 _id)`
-Finalizes a proposal after voting period.
+## Deployment
 
-**Access**: Board only
-**Parameters**:
-- `_id`: Proposal ID
+### Sepolia Testnet
+- Network: Sepolia Testnet
+- Chain ID: 11155111
+- Contract: `0x7c04dD380e26B56899493ec7A654EdEf108A2414`
+- Explorer: https://sepolia.etherscan.io
 
-```solidity
-await governance.finalize(1);
-```
+### Deployment Steps
+1. Fund deployer wallet with Sepolia ETH
+2. Configure `.env` with private key and RPC URL
+3. Run deployment script: `npx hardhat run scripts/deploy.ts --network sepolia`
+4. Verify contract on Etherscan: `npx hardhat verify --network sepolia CONTRACT_ADDRESS`
+5. Update frontend `.env` with deployed address
+6. Deploy frontend to hosting platform
 
-#### `getResults(uint256 _id)`
-Retrieves proposal results.
+## Video Demonstration
 
-**Access**: Board only
-**Parameters**:
-- `_id`: Proposal ID
+A comprehensive video demonstration is included showing:
+- Contract deployment and initialization
+- Company setup and role assignment
+- Proposal creation workflow
+- Confidential voting process
+- Vote encryption and submission
+- Result decryption and display
+- User interface walkthrough
 
-**Returns**: `(forVotes, againstVotes, passed)`
+## Future Enhancements
 
-```solidity
-const [forVotes, againstVotes, passed] = await governance.getResults(1);
-```
+- Delegation voting support
+- Multi-signature proposal approval
+- Vote weight by share amount
+- Proposal amendment system
+- Voting analytics dashboard
+- Mobile application
+- DAO treasury integration
+- Quadratic voting option
 
-### View Functions
+## Contributing
 
-#### `getCompanyInfo()`
-Returns company information.
+This project is submitted for the Zama FHEVM Bounty December 2025. Contributions and feedback are welcome.
 
-**Returns**: `(name, symbol, description, totalShares, timestamp, boardList)`
+## Resources
 
-#### `getShareholderInfo(address _addr)`
-Returns shareholder details.
+- [Zama FHEVM Documentation](https://docs.zama.ai/fhevm)
+- [FHEVM Solidity Library](https://github.com/zama-ai/fhevm)
+- [fhevmjs Client Library](https://github.com/zama-ai/fhevmjs)
+- [Hardhat Documentation](https://hardhat.org/docs)
+- [Vue.js Documentation](https://vuejs.org/)
 
-**Parameters**:
-- `_addr`: Shareholder address
+## License
 
-**Returns**: `(active, shares, id, name, registered)`
+MIT License - see LICENSE file for details
 
-#### `getProposalInfo(uint256 _id)`
-Returns complete proposal information.
+## Acknowledgments
 
-**Parameters**:
-- `_id`: Proposal ID
+- Zama team for FHEVM technology and bounty program
+- OpenZeppelin for security libraries
+- Vue.js and Hardhat communities
 
-**Returns**: Multiple values including type, title, proposer, deadline, etc.
+## Support
 
-#### `getTotalProposals()`
-Returns total number of proposals.
-
-**Returns**: `uint256`
-
-#### `isBoardMember(address _member)`
-Checks if address is a board member.
-
-**Parameters**:
-- `_member`: Address to check
-
-**Returns**: `bool`
-
-#### `hasVotedOn(uint256 _id, address _voter)`
-Checks if address has voted on proposal.
-
-**Parameters**:
-- `_id`: Proposal ID
-- `_voter`: Voter address
-
-**Returns**: `bool`
+For questions and issues:
+- GitHub Issues: [Project Repository]
+- FHEVM Discord: [Zama Discord]
+- Documentation: [Project Docs]
 
 ---
 
-## ❓ Troubleshooting
+**Built with ❤️ for the Zama FHEVM Bounty December 2025**
 
-### Common Issues
-
-#### Issue: "Cannot find module '@nomicfoundation/hardhat-toolbox'"
-
-**Solution**:
-```bash
-npm install --save-dev @nomicfoundation/hardhat-toolbox
-```
-
-#### Issue: "Error: insufficient funds for gas"
-
-**Solution**:
-1. Check wallet balance: `npx hardhat run scripts/check-balance.js`
-2. Get testnet ETH: [Sepolia Faucet](https://sepoliafaucet.com/)
-3. Verify correct network in MetaMask
-
-#### Issue: "Error: nonce has already been used"
-
-**Solution**:
-```bash
-# Reset MetaMask account
-# Settings > Advanced > Reset Account
-```
-
-#### Issue: "Contract verification failed"
-
-**Solution**:
-```bash
-# Wait 2-3 minutes after deployment
-# Ensure ETHERSCAN_API_KEY is set
-npm run verify:sepolia
-```
-
-#### Issue: "Transaction underpriced"
-
-**Solution**:
-```bash
-# Increase gas price in hardhat.config.js
-gasPrice: 20000000000, // 20 gwei
-```
-
-#### Issue: Tests failing locally
-
-**Solution**:
-```bash
-# Clean and reinstall
-npm run clean
-rm -rf node_modules package-lock.json
-npm install
-npm test
-```
-
-### Network Issues
-
-#### Sepolia RPC not responding
-
-**Alternative RPC URLs**:
-```env
-# Option 1: Alchemy
-SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/YOUR_KEY
-
-# Option 2: Infura
-SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_KEY
-
-# Option 3: Public node (backup)
-SEPOLIA_RPC_URL=https://rpc.sepolia.org
-```
-
-### Gas Optimization
-
-If transactions are too expensive:
-
-```bash
-# Run gas benchmark
-npm run gas:benchmark
-
-# Optimize code
-# Review gas report
-npm run test:gas
-```
-
-### Getting Help
-
-- 📖 [Documentation](./docs)
-- 💬 [GitHub Discussions](https://github.com/YOUR_ORG/YOUR_REPO/discussions)
-- 🐛 [Report Bug](https://github.com/YOUR_ORG/YOUR_REPO/issues)
-- 📧 Email: support@your-domain.com
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how you can help:
-
-### Development Process
-
-1. **Fork the repository**
-```bash
-git clone https://github.com/YOUR_USERNAME/corporate-governance-platform.git
-```
-
-2. **Create a branch**
-```bash
-git checkout -b feature/your-feature-name
-```
-
-3. **Make your changes**
-```bash
-# Follow coding standards
-npm run lint
-npm run format
-```
-
-4. **Test your changes**
-```bash
-npm test
-npm run coverage
-npm run security:audit
-```
-
-5. **Commit your changes**
-```bash
-# Use conventional commits
-git commit -m "feat(governance): add new voting mechanism"
-```
-
-6. **Push and create PR**
-```bash
-git push origin feature/your-feature-name
-```
-
-### Commit Convention
-
-Use conventional commits:
-
-```
-feat(scope): add new feature
-fix(scope): bug fix
-docs(scope): documentation update
-style(scope): formatting changes
-refactor(scope): code refactoring
-test(scope): add tests
-chore(scope): maintenance tasks
-```
-
-### Code Standards
-
-- ✅ Follow Solidity style guide
-- ✅ Write comprehensive tests
-- ✅ Document all functions
-- ✅ Maintain >90% coverage
-- ✅ Pass all lint checks
-- ✅ Include gas benchmarks
-
-### Areas for Contribution
-
-- 🔧 Smart contract improvements
-- 🧪 Additional test cases
-- 📝 Documentation enhancements
-- 🐛 Bug fixes
-- ⚡ Performance optimizations
-- 🔒 Security improvements
-
----
-
-## 🗺️ Roadmap
-
-### Phase 1: Current (v1.0.0) ✅
-- ✅ Core governance functions
-- ✅ Confidential voting
-- ✅ Access control
-- ✅ 60+ test cases
-- ✅ CI/CD pipeline
-- ✅ Security audits
-
-### Phase 2: Q2 2025 (v1.1.0) 🔄
-- ⏳ Frontend dApp interface
-- ⏳ Multi-signature support
-- ⏳ Proposal templates
-- ⏳ Email notifications
-- ⏳ Advanced analytics dashboard
-
-### Phase 3: Q3 2025 (v2.0.0) 📋
-- 📋 Upgradeable contracts
-- 📋 Governance token integration
-- 📋 Delegation mechanism
-- 📋 Proposal execution automation
-- 📋 Integration with traditional systems
-
-### Phase 4: Q4 2025 (v2.1.0) 💡
-- 💡 Cross-chain deployment
-- 💡 Mobile application
-- 💡 AI-powered governance insights
-- 💡 Regulatory compliance tools
-- 💡 Enterprise API
-
-### Long-term Vision 🌟
-- Layer 2 scaling
-- Privacy enhancements (ZK-proofs)
-- DAOstack integration
-- Global governance platform
-- Industry partnerships
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-```
-MIT License
-
-Copyright (c) 2024 Corporate Governance Platform
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-```
-
----
-
-## 🙏 Acknowledgments
-
-- **OpenZeppelin** for battle-tested smart contract libraries
-- **Hardhat** team for excellent development tools
-- **Ethereum Foundation** for the platform
-- **Community contributors** for feedback and improvements
-
----
-
-## 📞 Contact
-
-- **Website**: [https://your-domain.com](https://your-domain.com)
-- **GitHub**: [github.com/YOUR_ORG/corporate-governance-platform](https://github.com/YOUR_ORG/corporate-governance-platform)
-- **Email**: contact@your-domain.com
-- **Twitter**: [@YourHandle](https://twitter.com/YourHandle)
-- **Discord**: [Join our community](https://discord.gg/YOUR_INVITE)
-
----
-
-## 📊 Project Stats
-
-![GitHub stars](https://img.shields.io/github/stars/YOUR_ORG/YOUR_REPO?style=social)
-![GitHub forks](https://img.shields.io/github/forks/YOUR_ORG/YOUR_REPO?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/YOUR_ORG/YOUR_REPO?style=social)
-![GitHub issues](https://img.shields.io/github/issues/YOUR_ORG/YOUR_REPO)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/YOUR_ORG/YOUR_REPO)
-![GitHub last commit](https://img.shields.io/github/last-commit/YOUR_ORG/YOUR_REPO)
-
----
-
-<div align="center">
-
-**Built with ❤️ for transparent and secure corporate governance**
-
-⭐ Star us on GitHub — it motivates us a lot!
-
-[⬆ Back to Top](#-corporate-governance-platform)
-
-</div>
+*Demonstrating the power of Fully Homomorphic Encryption in corporate governance*
