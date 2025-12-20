@@ -1,388 +1,228 @@
 # Deployment Guide
 
-This document provides comprehensive instructions for deploying and managing the Corporate Governance Platform smart contracts.
+## Local Development
 
-## Table of Contents
+### Prerequisites
+- Node.js v20+
+- npm v9.0.0+
+- Hardhat CLI
 
-- [Prerequisites](#prerequisites)
-- [Environment Setup](#environment-setup)
-- [Deployment Process](#deployment-process)
-- [Contract Verification](#contract-verification)
-- [Deployment Information](#deployment-information)
-- [Network Configuration](#network-configuration)
-- [Troubleshooting](#troubleshooting)
-
-## Prerequisites
-
-Before deploying, ensure you have:
-
-1. **Node.js** (v18 or higher)
-2. **npm** or **yarn** package manager
-3. **MetaMask** or another Ethereum wallet
-4. **Test ETH** for Sepolia testnet deployment
-5. **Etherscan API Key** for contract verification
-
-## Environment Setup
-
-### 1. Install Dependencies
-
+### Step 1: Install Dependencies
 ```bash
 npm install
 ```
 
-### 2. Configure Environment Variables
-
-Create a `.env` file in the project root (copy from `.env.example`):
-
+### Step 2: Start Local FHEVM Node
 ```bash
-cp .env.example .env
+# Terminal 1
+npx hardhat node
 ```
 
-Edit `.env` and add your configuration:
-
-```env
-# Network RPC URLs
-SEPOLIA_RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
-MAINNET_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY
-
-# Private key (without 0x prefix)
-PRIVATE_KEY=your_private_key_here
-
-# Etherscan API Key
-ETHERSCAN_API_KEY=your_etherscan_api_key_here
-
-# Optional: Gas reporting
-REPORT_GAS=false
-COINMARKETCAP_API_KEY=your_coinmarketcap_api_key
-```
-
-**Security Warning:** Never commit your `.env` file to version control!
-
-### 3. Get Test ETH
-
-For Sepolia testnet:
-- Visit [Sepolia Faucet](https://sepoliafaucet.com/)
-- Enter your wallet address
-- Request test ETH
-
-## Deployment Process
-
-### Local Development Network
-
-1. **Start Local Hardhat Node:**
+### Step 3: Deploy Contract
 ```bash
-npm run node
+# Terminal 2
+npx hardhat deploy --network localhost
 ```
 
-2. **Deploy to Local Network:**
+Contract will be deployed to a local address shown in output.
+
+### Step 4: Interact
 ```bash
-npm run deploy:local
+npx hardhat governance:info --contract <ADDRESS> --network localhost
 ```
 
-### Sepolia Testnet
+## Sepolia Testnet Deployment
 
-1. **Ensure you have Sepolia ETH** in your deployment wallet
+### Prerequisites
+- MetaMask or similar Web3 wallet
+- Sepolia ETH for gas fees (get from faucet)
+- Infura API key
 
-2. **Compile Contracts:**
+### Step 1: Set Environment Variables
 ```bash
-npm run compile
+# Set your mnemonic (from MetaMask)
+npx hardhat vars set MNEMONIC
+
+# Set Infura API key
+npx hardhat vars set INFURA_API_KEY
+
+# Set Etherscan API key (for verification)
+npx hardhat vars set ETHERSCAN_API_KEY
 ```
 
-3. **Deploy to Sepolia:**
+### Step 2: Fund Deployer Wallet
+Get Sepolia ETH from faucet:
+- https://www.infura.io/faucet/sepolia
+- https://sepolia-faucet.pk910.de/
+
+### Step 3: Deploy
 ```bash
-npm run deploy:sepolia
+npx hardhat deploy --network sepolia
 ```
 
-Expected output:
-```
-========================================
-Corporate Governance Platform Deployment
-========================================
+Note the contract address from output.
 
-Deployment Configuration:
--------------------------
-Network: sepolia
-Chain ID: 11155111
-Deployer Address: 0x...
-Account Balance: 0.5 ETH
-
-Deploying CorporateGovernanceUltimate contract...
-✓ Contract deployed successfully!
-Contract Address: 0x742d35Cc6474C4f0D1c6B2f0B9b8E99a8c123456
-Transaction Hash: 0x...
-Gas Used: 2547893
-Block Number: 5123456
-
-Initializing company configuration...
-✓ Company initialized
-Company Name: Corporate Governance Platform
-Total Shares: 1,000,000
-
-✓ Deployment information saved to: deployments/deployment-sepolia-1234567890.json
-```
-
-### Mainnet Deployment
-
-**Warning:** Deploying to mainnet requires real ETH. Double-check all configurations!
-
-1. **Update `.env` with mainnet RPC URL**
-2. **Ensure sufficient ETH for gas fees**
-3. **Deploy:**
-```bash
-npx hardhat run scripts/deploy.js --network mainnet
-```
-
-## Contract Verification
-
-Verify your contract on Etherscan for transparency and easier interaction:
-
-### Automatic Verification
-
-Verification happens automatically during deployment on testnets/mainnet.
-
-### Manual Verification
-
-If automatic verification fails:
-
-```bash
-npm run verify:sepolia
-```
-
-Or manually using Hardhat:
-
+### Step 4: Verify Contract (Optional)
 ```bash
 npx hardhat verify --network sepolia <CONTRACT_ADDRESS>
 ```
 
-Expected output:
-```
-========================================
-Contract Verification on Etherscan
-========================================
+## Testing Deployment
 
-Deployment Information:
------------------------
-Network: sepolia
-Contract Address: 0x742d35Cc6474C4f0D1c6B2f0B9b8E99a8c123456
-
-Starting verification process...
-✓ Contract verified successfully!
-
-View on Etherscan:
-https://sepolia.etherscan.io/address/0x742d35Cc6474C4f0D1c6B2f0B9b8E99a8c123456#code
-```
-
-## Deployment Information
-
-### Deployment Artifacts
-
-After deployment, check the `deployments/` directory for JSON files containing:
-
-- Contract address
-- Network information
-- Deployer address
-- Transaction hash
-- Block number
-- Company configuration
-- Timestamp
-
-Example `deployment-sepolia-1234567890.json`:
-```json
-{
-  "network": "sepolia",
-  "chainId": "11155111",
-  "contractAddress": "0x742d35Cc6474C4f0D1c6B2f0B9b8E99a8c123456",
-  "deployer": "0xYourAddress...",
-  "companyName": "Corporate Governance Platform",
-  "totalShares": 1000000,
-  "deploymentTime": "2024-01-15T10:30:00.000Z",
-  "blockNumber": 5123456,
-  "transactionHash": "0x..."
-}
-```
-
-### Network Details
-
-#### Sepolia Testnet
-- **Network Name:** Sepolia
-- **Chain ID:** 11155111
-- **RPC URL:** https://ethereum-sepolia-rpc.publicnode.com
-- **Block Explorer:** https://sepolia.etherscan.io/
-- **Faucet:** https://sepoliafaucet.com/
-
-#### Ethereum Mainnet
-- **Network Name:** Mainnet
-- **Chain ID:** 1
-- **RPC URL:** https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY
-- **Block Explorer:** https://etherscan.io/
-
-## Network Configuration
-
-The project supports multiple networks configured in `hardhat.config.js`:
-
-### Supported Networks
-
-| Network | Chain ID | Use Case |
-|---------|----------|----------|
-| Hardhat | 31337 | Local testing |
-| Localhost | 31337 | Local node |
-| Sepolia | 11155111 | Public testnet |
-| Mainnet | 1 | Production |
-
-### Custom Network
-
-To add a custom network, edit `hardhat.config.js`:
-
-```javascript
-networks: {
-  customNetwork: {
-    url: process.env.CUSTOM_RPC_URL,
-    accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-    chainId: 12345,
-  }
-}
-```
-
-## Post-Deployment Steps
-
-After successful deployment:
-
-### 1. Interact with Contract
-
+### On Localhost
 ```bash
-npm run interact
+# After deployment to localhost
+npx hardhat test --network localhost
 ```
 
-This script will:
-- Connect to your deployed contract
-- Register sample shareholders
-- Create a test proposal
-- Simulate voting
-
-### 2. Run Full Simulation
-
+### On Sepolia
 ```bash
-npm run simulate
+# WARNING: Only run a few tests as gas is consumed
+npx hardhat test --network sepolia --grep "Deployment"
 ```
 
-This creates a complete governance scenario with:
-- Multiple board members
-- Multiple shareholders
-- Various proposal types
-- Voting simulation
+## Interacting with Deployed Contract
 
-### 3. Update Frontend
-
-If you have a frontend application:
-
-1. Copy the contract address from deployment output
-2. Update your frontend configuration:
-```javascript
-const CONTRACT_ADDRESS = "0x742d35Cc6474C4f0D1c6B2f0B9b8E99a8c123456";
-```
-
-## Troubleshooting
-
-### Common Issues
-
-#### 1. Insufficient Funds
-
-**Error:** `sender doesn't have enough funds`
-
-**Solution:**
-- Check your wallet balance
-- Get test ETH from faucet (for testnet)
-- Ensure you have enough for gas fees
-
-#### 2. Nonce Too Low
-
-**Error:** `nonce has already been used`
-
-**Solution:**
+### Initialize Company
 ```bash
-# Reset your account in MetaMask
-# Or specify nonce manually in deployment script
+npx hardhat governance:init \
+  --contract <ADDRESS> \
+  --network sepolia \
+  --name "MyCompany Inc." \
+  --shares 10000
 ```
 
-#### 3. Gas Estimation Failed
-
-**Error:** `cannot estimate gas`
-
-**Solution:**
-- Check contract code for errors
-- Ensure all constructor parameters are correct
-- Try increasing gas limit manually
-
-#### 4. Verification Failed
-
-**Error:** `Etherscan API error`
-
-**Solution:**
-- Verify ETHERSCAN_API_KEY is correct
-- Wait 1-2 minutes after deployment
-- Check if contract is already verified
-- Ensure you're on the correct network
-
-#### 5. RPC Connection Issues
-
-**Error:** `could not detect network`
-
-**Solution:**
-- Check internet connection
-- Verify RPC URL in `.env`
-- Try alternative RPC endpoints
-- Check if network is experiencing issues
-
-### Getting Help
-
-If you encounter issues:
-
-1. Check the [Hardhat Documentation](https://hardhat.org/docs)
-2. Review contract compilation errors: `npm run compile`
-3. Enable verbose logging in scripts
-4. Check network status and gas prices
-
-## Gas Optimization
-
-### Estimate Gas Costs
-
-Enable gas reporting:
-
+### Add Shareholder
 ```bash
-REPORT_GAS=true npm test
+npx hardhat governance:add-shareholder \
+  --contract <ADDRESS> \
+  --network sepolia \
+  --address 0x... \
+  --name "John Doe" \
+  --shares 1000
 ```
 
-### Current Deployment Costs (Estimated)
+### List Proposals
+```bash
+npx hardhat governance:list-proposals \
+  --contract <ADDRESS> \
+  --network sepolia
+```
 
-| Network | Deployment Cost | Typical Range |
-|---------|----------------|---------------|
-| Sepolia | ~0.001 ETH | 0.0005 - 0.002 ETH |
-| Mainnet | ~0.05 ETH | 0.03 - 0.1 ETH |
+## Environment Configuration
 
-*Note: Costs vary based on network congestion and gas prices*
+### Hardhat Variables
+```bash
+# View all variables
+npx hardhat vars list
+
+# Set a variable
+npx hardhat vars set VARIABLE_NAME
+
+# Get a variable value
+npx hardhat vars get VARIABLE_NAME
+```
+
+### .env File (Alternative)
+Create `.env.local`:
+```
+MNEMONIC="your seed phrase"
+INFURA_API_KEY="your api key"
+ETHERSCAN_API_KEY="your etherscan key"
+```
 
 ## Security Checklist
 
-Before mainnet deployment:
-
-- [ ] Audit smart contract code
-- [ ] Test all functions thoroughly
-- [ ] Verify access controls
-- [ ] Check for reentrancy vulnerabilities
-- [ ] Review upgrade mechanisms
-- [ ] Test on testnet first
+- [ ] Use a dedicated deployer wallet
+- [ ] Store private keys securely (never in git)
+- [ ] Test on localhost first
 - [ ] Verify contract on Etherscan
-- [ ] Document all functions
-- [ ] Set up monitoring
-- [ ] Prepare incident response plan
+- [ ] Check contract initialization
+- [ ] Verify board members added
+- [ ] Test voting flow before public use
 
-## Additional Resources
+## Troubleshooting
 
-- [Hardhat Documentation](https://hardhat.org/)
-- [OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts/)
-- [Etherscan API](https://docs.etherscan.io/)
-- [Solidity Documentation](https://docs.soliditylang.org/)
+**"Insufficient funds"**
+- Get Sepolia ETH from faucet
+- Check wallet address is correct
 
----
+**"Invalid mnemonic"**
+- Check MNEMONIC is 12 or 24 words separated by spaces
+- Get new mnemonic from MetaMask: Settings > Security & Privacy > Reveal Seed Phrase
 
-**Need Help?** Create an issue in the project repository or consult the documentation.
+**"Network timeout"**
+- Check INFURA_API_KEY is valid
+- Verify internet connection
+- Try again after short delay
+
+**"Contract already deployed"**
+- Check artifacts/deployments directory
+- Clear with `npm run clean` and redeploy
+
+## Gas Estimation
+
+Typical gas usage:
+- Deploy: ~500k gas
+- Initialize: ~50k gas
+- Add shareholder: ~80k gas
+- Create proposal: ~120k gas
+- Vote (encrypted): ~150k gas
+- Finalize: ~100k gas
+
+Sepolia ETH needed: ~0.5-1.0 ETH for full testing
+
+## Live Network Considerations
+
+For production deployment:
+
+1. **Security Audit**: Have contract audited before mainnet
+2. **Time Lock**: Consider adding time delay for governance changes
+3. **Multi-Sig**: Use multisig wallet for owner functions
+4. **Transparent Proxy**: Consider upgradeable pattern for future fixes
+5. **Gas Optimization**: Monitor gas prices before large deployments
+
+## Monitoring Deployment
+
+### View Contract on Etherscan
+```
+https://sepolia.etherscan.io/address/<CONTRACT_ADDRESS>
+```
+
+### Monitor Events
+```bash
+npx hardhat run scripts/watch-events.ts --network sepolia
+```
+
+### Check Balance
+```bash
+npx hardhat accounts --network sepolia
+```
+
+## Rollback Procedure
+
+If deployment fails:
+
+```bash
+# Clean artifacts
+npm run clean
+
+# Check deploy scripts
+cat deploy/001_deploy_governance.ts
+
+# Redeploy
+npx hardhat deploy --network sepolia
+```
+
+## Next Steps
+
+After deployment:
+1. Verify contract on Etherscan
+2. Initialize company
+3. Add board members
+4. Register shareholders
+5. Create test proposal
+6. Test voting flow
+7. Monitor gas usage
+
+See FHEVM_README.md for detailed testing instructions.
